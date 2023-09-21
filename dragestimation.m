@@ -22,3 +22,7 @@
 %   https://github.com/ngiersetum/tmal02_lab3
 %
 %% Executable Section
+
+load('data/actable.mat')
+
+% a343data = acdata{"A340-300",:};
