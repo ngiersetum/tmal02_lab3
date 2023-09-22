@@ -25,4 +25,21 @@
 
 load('data/actable.mat')
 
-% a343data = acdata{"A340-300",:};
+% FLIGHT CONDITION
+altitude = 9000;                % [m]
+
+[T, P, rho, a, mu] = ISAfunction(altitude);
+
+vApp_ms = acdata{"A340-300", "Speed_Vapp"} * 1.852 / 3.6;
+vNe_ms = acdata{"A340-300", "Speed_Mne"} * a;
+
+vMin = floor(vApp_ms/10)*10;
+vMax = ceil(vNe_ms/10)*10;
+
+velocities = vMin:10:vMax;      % [m/s]
+
+
+% Calculate contributions across the range of velocities
+[skin, form, misc, induced] = dragFunction("A340-300", altitude, velocities)
+
+
