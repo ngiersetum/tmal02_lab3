@@ -1,4 +1,4 @@
-function [skin, form, misc, induced] = dragFunction(altitude, velocities)
+function [parasitic, induced] = dragFunction(altitude, velocities)
 % Calculate different drag contributions for one given altitude over one or
 % several velocities
 % 

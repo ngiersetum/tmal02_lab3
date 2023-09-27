@@ -36,10 +36,24 @@ vNe_ms = acdata{"A340-300", "Speed_Mne"} * a;
 vMin = floor(vApp_ms/10)*10;
 vMax = ceil(vNe_ms/10)*10;
 
-velocities = vMin:10:vMax;      % [m/s]
+velocities = vMin:5:vMax;      % [m/s]
 
 
 % Calculate contributions across the range of velocities
-[skin, form, misc, induced] = dragFunction(altitude, velocities);
+[parasitic, induced] = dragFunction(altitude, velocities);
 
+%% Plot results
+
+hold on
+grid on
+
+plot(velocities, parasitic, 'g');
+plot(velocities, induced, 'b');
+plot(velocities, parasitic + induced, 'r', 'LineWidth', 1);
+
+legend('Parasitic Drag', 'Induced Drag', 'Total Drag')
+
+xlabel('Flight Velocity [m/s]')
+ylabel('Drag [N]')
+title('A340-300: Drag at different velocities at 9000m')
 
