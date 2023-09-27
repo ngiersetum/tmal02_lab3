@@ -16,7 +16,7 @@ function [skin, form, misc, induced] = dragFunction(altitude, velocities)
 %   https://github.com/ngiersetum/tmal02_lab3
 
 %% Technical data A340-300
-l = acdata("A340-300", "Fuse_Length"); % length in [m]
+l = table2array(acdata("A340-300", "Fuse_Length")); % length in [m]
 l_cockpit = 6; % [m]
 l_empennage = 12; % [m]
 s = 60.3; % spanwidth in [m]
@@ -24,14 +24,14 @@ h = 16.80; % height in [m]
 s_wing = 363.1; % wing reference are in [m^2]
 AR = 10;
 sweep_angle = 29.7; %[°]
-r_fuse = acdata("A340-300", "Fuse_Width") * 0.5; % fuselage outside width in [m]
+r_fuse = table2array(acdata("A340-300", "Fuse_Width"))/2; % fuselage outside width in [m]
 slant_height_cockpit = sqrt(r_fuse^2 + l_cockpit^2);
 slant_height_empennage = sqrt(r_fuse^2 + l_empennage^2);
 
 s_wet_wing = 2.25 * s_wing;
-s_wet_fuse = (2*pi*l*r_fuse + 2*pi*r_fuse^2) + (pi*r_fuse^2 + pi * r_fuse * slant_height_cockpit) + (pi*r_fuse^2 + pi * r_fuse * slant_height_empennage);
-s_wet_nacelle = 4 * ((2*pi*(acdata("A340-300", "NacelleWidth")/2)^2) + (2*pi*acdata("A340-300", "NacelleWidth")*0.5*acdata("A340-300", "NacelleLength")));
-s_wet_empennage = 2.25 * acdata("A340-300", "TailVertArea") + 2.25 * acdata("A340-300", "TailHorArea");
+s_wet_fuse = (2*pi*l*r_fuse + 2 * pi*r_fuse^2) + (pi*r_fuse^2 + pi * r_fuse * slant_height_cockpit) + (pi*r_fuse^2 + pi * r_fuse * slant_height_empennage);
+s_wet_nacelle = 4 * ((2*pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + (2*pi*table2array(acdata("A340-300", "NacelleWidth")) * 0.5 * table2array(acdata("A340-300", "NacelleLength"))));
+s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 * table2array(acdata("A340-300", "TailHorArea"));
 
 
     
