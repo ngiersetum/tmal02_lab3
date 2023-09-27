@@ -33,8 +33,8 @@ slant_height_empennage = sqrt(r_fuse^2 + l_empennage^2);
 s_wet_wing = 2.25 * s_wing;
 s_wet_fuse = (2*pi*l*r_fuse + 2 * pi*r_fuse^2) + (pi*r_fuse^2 + pi * r_fuse * slant_height_cockpit) + (pi*r_fuse^2 + pi * r_fuse * slant_height_empennage);
 s_wet_nacelle = 4 * ((2*pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + (2*pi*table2array(acdata("A340-300", "NacelleWidth")) * 0.5 * table2array(acdata("A340-300", "NacelleLength"))));
-s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 * table2array(acdata("A340-300", "TailHorArea"));
-
+s_wet_tvert = 2.25 * table2array(acdata("A340-300", "TailVertArea"));
+s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
 
     
     %% Parameters for induced drag
@@ -93,11 +93,26 @@ s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 
         FF_tvert = (1 + 0.6/xc_tvert * tc_tvert + 100* tc_tvert^4) * (1.34 * mach^0.18 * cos(phi_tvert)^0.28);
         FF_thor = (1 + 0.6/xc_thor * tc_thor + 100* tc_thor^4) * (1.34 * mach^0.18 * cos(phi_thor)^0.28);
         FF_nacelle = 1 + 0.35 / f_nacelle;
-        form(i) = 0;
+        
 
-        % Interference Drag
+        % Interference Drag factors
+        Q_fuse = 1.0;
+        Q_wing = 1.0;
+        Q_tvert = 1.06;
+        Q_thor = 1.06;
+        Q_nacelle = 1.3;
 
 
+        % Component drag
+        Cd_fuse = (Csd_fuse * FF_fuse * Q_fuse * s_wet_fuse)/s_wing;
+        Cd_wing = (Csd_wing * FF_fuse * Q_wing * s_wet_wing)/s_wing;
+        Cd_tvert = (Csd_tvert * FF_tvert * Q_tvert * s_wet_tvert)/s_wing;
+        Cd_thor = (Csd_thor * FF_thor * Q_thor * s_wet_thor)/s_wing;
+        Cd_nacelle = (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing;
+
+        % Overall component drag
+        Cd = Cd_fuse + Cd_wing + Cd_tvert + Cd_thor + Cd_nacelle;
+        
         % Miscellaneous Drag
         misc(i) = 0;
 
