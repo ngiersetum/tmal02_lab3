@@ -56,36 +56,42 @@ s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
         % characteristic lengths
         lchar_fuse = l;
         lchar_wing = table2array(acdata("A340-300", "MAC"));
-        lchar_tvert = ;
-        lchar_thor = 
+        lchar_tvert = 5.8; % [m]
+        lchar_thor = 2.9; % [m]
         lchar_nacelle = table2array(acdata("A340-300", "NacelleLength")); 
 
         % chordwise location of maximum thickness point
-        xc_wing = 0;
-        xc_tvert = 0;
-        xc_thor = 0;
+        xc_wing = 0.4;
+        xc_tvert = 0.25;
+        xc_thor = 0.25;
 
         %thickness to chord
-        tc_wing = 0;
-        tc_tvert = 0;
-        tc_thor = 0;
+        tc_wing = 0.128;
+        tc_tvert = 0.11;
+        tc_thor = 0.11;
 
         % sweep angle at maximum thickness line
-        phi_wing = 0;
-        phi_tvert = 0;
-        phi_thor = 0;
+        phi_wing = 30;
+        phi_tvert = deg2rad(table2array(acdata("A340-300", "TailVertSweep")));
+        phi_thor = deg2rad(table2array(acdata("A340-300", "TailHorSweep")));
 
         % slenderness ratios
         f_fuse = lchar_fuse/table2array(acdata("A340-300", "Fuse_Width"));
         f_nacelle = lchar_nacelle/table2array(acdata("A340-300", "NacelleWidth"));
+
+        % component Reynolds numbers
+        Re_fuse = Re_pre * lchar_fuse;
+        Re_wing = Re_pre * lchar_wing;
+        Re_tvert = Re_pre * lchar_tvert;
+        Re_thor = Re_pre * lchar_thor;
+        Re_nacelle = Re_pre * lchar_nacelle;
         
         % Skin Friction Drag
-        % Fuselage
-        Csd_fuse = 0.455 / ((log10(Re_pre * lchar_fuse))^2.58 *(1 + 0.144 * mach^2)^0.65);
-        Csd_wing = 0.455 / ((log10(Re_pre * lchar_wing))^2.58 *(1 + 0.144 * mach^2)^0.65);
-        Csd_tvert = 0.455 / ((log10(Re_pre * lchar_tvert))^2.58 *(1 + 0.144 * mach^2)^0.65);
-        Csd_thor = 0.455 / ((log10(Re_pre * lchar_thor))^2.58 *(1 + 0.144 * mach^2)^0.65);
-        Csd_nacelle = 0.455 / ((log10(Re_pre * lchar_nacelle))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_fuse = 0.455 / ((log10(Re_fuse))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_wing = 0.455 / ((log10(Re_wing))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_tvert = 0.455 / ((log10(Re_tvert))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_thor = 0.455 / ((log10(Re_thor))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_nacelle = 0.455 / ((log10(Re_nacelle))^2.58 *(1 + 0.144 * mach^2)^0.65);
 
         % Form Drag
         FF_fuse = (1 + 5/(f_fuse^1.5) + f_fuse/400);
@@ -109,14 +115,12 @@ s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
         Cd_tvert = (Csd_tvert * FF_tvert * Q_tvert * s_wet_tvert)/s_wing;
         Cd_thor = (Csd_thor * FF_thor * Q_thor * s_wet_thor)/s_wing;
         Cd_nacelle = (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing;
+        
 
         % Overall component drag
-        Cd = Cd_fuse + Cd_wing + Cd_tvert + Cd_thor + Cd_nacelle;
-        
-        % Miscellaneous Drag
-        misc(i) = 0;
+        Cd = (Cd_fuse + Cd_wing + Cd_tvert + Cd_thor + Cd_nacelle) * 1.1; % 10% misc drag
 
-        parasitic(i) = 0;
+        parasitic(i) = Cd * s_wing * dynPress;
         %% LIFT-INDUCED DRAG
 
         weight = 230000; % [kg], average of MTOW and MLW
