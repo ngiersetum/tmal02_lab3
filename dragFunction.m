@@ -101,6 +101,7 @@ s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 
         % Miscellaneous Drag
         misc(i) = 0;
 
+        parasitic(i) = 0;
         %% LIFT-INDUCED DRAG
 
         weight = 230000; % [kg], average of MTOW and MLW

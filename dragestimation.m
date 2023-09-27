@@ -42,18 +42,29 @@ velocities = vMin:5:vMax;      % [m/s]
 % Calculate contributions across the range of velocities
 [parasitic, induced] = dragFunction(altitude, velocities);
 
-%% Plot results
+machs = velocities / a;
 
+%% Thrust calculations
+
+staticthrust = table2array(acdata("A340-300","EngStaticThrustkN")) * 4000; % *1000 for kN -> N
+rho0 = 1.2250;
+
+thrust = staticthrust * (rho / rho0) * (1 - 0.25*machs);
+
+thrust = thrust * table2array(acdata("A340-300","EngNumbersOf"));
+
+%% Plot results
 hold on
 grid on
 
-plot(velocities, parasitic, 'g');
-plot(velocities, induced, 'b');
-plot(velocities, parasitic + induced, 'r', 'LineWidth', 1);
+plot(machs, parasitic, 'g');
+plot(machs, induced, 'b');
+plot(machs, parasitic + induced, 'r', 'LineWidth', 1);
+plot(machs, thrust, 'k', 'LineWidth', 1);
 
-legend('Parasitic Drag', 'Induced Drag', 'Total Drag')
+legend('Parasitic Drag', 'Induced Drag', 'Total Drag', 'Thrust')
 
-xlabel('Flight Velocity [m/s]')
-ylabel('Drag [N]')
+xlabel('Flight Velocity [Mach]')
+ylabel('Thrust, Drag [N]')
 title('A340-300: Drag at different velocities at 9000m')
 
