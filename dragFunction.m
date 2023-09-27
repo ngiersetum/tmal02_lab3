@@ -1,4 +1,4 @@
-function [skin, form, misc, induced] = dragFunction(aircraft, altitude, velocities)
+function [skin, form, misc, induced] = dragFunction(altitude, velocities)
 % Calculate different drag contributions for one given altitude over one or
 % several velocities
 % 
@@ -32,7 +32,12 @@ w_eng = 1.908; % [m]
 h_eng = 2.25; % [m]
 d_fan = 1.84; % [m]
 %Takeoff thrust of one engine = 138.78–151.24 kN
-%%
+
+    
+    %% Parameters for induced drag
+
+    e = 0.776;   % Oswald Efficiency Number
+
     [T, P, rho, a, mu] = ISAfunction(altitude);     % atmospheric conditions
 
     for i=1:numel(velocities)
@@ -49,10 +54,19 @@ d_fan = 1.84; % [m]
         % Form Drag
         form(i) = 0;
 
+        % Interference Drag
+
+
         % Miscellaneous Drag
         misc(i) = 0;
 
         %% LIFT-INDUCED DRAG
+
+        weight = 230000; % [kg], average of MTOW and MLW
+        lift = weight * 9.80665; % lift is equal to weight in cruise (L = mg)
+        cl = sref;
+
+        cdi = cl^2 / e*pi*ar
 
         induced(i) = 0;
     end

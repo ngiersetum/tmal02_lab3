@@ -40,6 +40,6 @@ velocities = vMin:10:vMax;      % [m/s]
 
 
 % Calculate contributions across the range of velocities
-[skin, form, misc, induced] = dragFunction("A340-300", altitude, velocities)
+[skin, form, misc, induced] = dragFunction(altitude, velocities);
 
 
