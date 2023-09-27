@@ -120,7 +120,7 @@ s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
         parasitic(i) = Cd * s_wing * dynPress;
         %% LIFT-INDUCED DRAG
 
-        weight = 230000; % [kg], average of MTOW and MLW
+        weight = 0.8 * table2array(acdata("A340-300","MTOW")); % [kg], 80% of MTOW
         lift = weight * 9.80665; % lift is equal to weight in cruise (L = mg)
 
         cl = lift / (s_wing * dynPress);

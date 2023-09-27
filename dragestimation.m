@@ -38,8 +38,7 @@ vMax = ceil(vNe_ms/10)*10;
 
 velocities = vMin:5:vMax;      % [m/s]
 
-
-% Calculate contributions across the range of velocities
+% Calculate drag across the range of velocities
 [parasitic, induced] = dragFunction(altitude, velocities);
 
 machs = velocities / a;
