@@ -48,15 +48,51 @@ s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 
         vel = velocities(i);
         mach = vel/a;
         nu = mu/rho;
-
         dynPress = 0.5 * rho * vel*vel;
-
+        Re_pre = 1/nu * vel;
+        
         %% PARASITIC DRAG (Component build-up method)
 
+        % characteristic lengths
+        lchar_fuse = l;
+        lchar_wing = table2array(acdata("A340-300", "MAC"));
+        lchar_tvert = ;
+        lchar_thor = 
+        lchar_nacelle = table2array(acdata("A340-300", "NacelleLength")); 
+
+        % chordwise location of maximum thickness point
+        xc_wing = 0;
+        xc_tvert = 0;
+        xc_thor = 0;
+
+        %thickness to chord
+        tc_wing = 0;
+        tc_tvert = 0;
+        tc_thor = 0;
+
+        % sweep angle at maximum thickness line
+        phi_wing = 0;
+        phi_tvert = 0;
+        phi_thor = 0;
+
+        % slenderness ratios
+        f_fuse = lchar_fuse/table2array(acdata("A340-300", "Fuse_Width"));
+        f_nacelle = lchar_nacelle/table2array(acdata("A340-300", "NacelleWidth"));
+        
         % Skin Friction Drag
-        skin(i) = 0;
+        % Fuselage
+        Csd_fuse = 0.455 / ((log10(Re_pre * lchar_fuse))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_wing = 0.455 / ((log10(Re_pre * lchar_wing))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_tvert = 0.455 / ((log10(Re_pre * lchar_tvert))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_thor = 0.455 / ((log10(Re_pre * lchar_thor))^2.58 *(1 + 0.144 * mach^2)^0.65);
+        Csd_nacelle = 0.455 / ((log10(Re_pre * lchar_nacelle))^2.58 *(1 + 0.144 * mach^2)^0.65);
 
         % Form Drag
+        FF_fuse = (1 + 5/(f_fuse^1.5) + f_fuse/400);
+        FF_wing = (1 + 0.6/xc_wing * tc_wing + 100* tc_wing^4) * (1.34 * mach^0.18 * cos(phi_wing)^0.28);
+        FF_tvert = (1 + 0.6/xc_tvert * tc_tvert + 100* tc_tvert^4) * (1.34 * mach^0.18 * cos(phi_tvert)^0.28);
+        FF_thor = (1 + 0.6/xc_thor * tc_thor + 100* tc_thor^4) * (1.34 * mach^0.18 * cos(phi_thor)^0.28);
+        FF_nacelle = 1 + 0.35 / f_nacelle;
         form(i) = 0;
 
         % Interference Drag
