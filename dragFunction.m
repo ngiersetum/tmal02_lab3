@@ -15,6 +15,8 @@ function [skin, form, misc, induced] = dragFunction(altitude, velocities)
 % Code History
 %   https://github.com/ngiersetum/tmal02_lab3
 
+load('data/actable.mat')
+
 %% Technical data A340-300
 l = table2array(acdata("A340-300", "Fuse_Length")); % length in [m]
 l_cockpit = 6; % [m]
@@ -22,7 +24,7 @@ l_empennage = 12; % [m]
 s = 60.3; % spanwidth in [m]
 h = 16.80; % height in [m]
 s_wing = 363.1; % wing reference are in [m^2]
-AR = 10;
+AR = table2array(acdata("A340-300", "AspectRatio"));
 sweep_angle = 29.7; %[°]
 r_fuse = table2array(acdata("A340-300", "Fuse_Width"))/2; % fuselage outside width in [m]
 slant_height_cockpit = sqrt(r_fuse^2 + l_cockpit^2);
@@ -47,6 +49,8 @@ s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 
         mach = vel/a;
         nu = mu/rho;
 
+        dynPress = 0.5 * rho * vel*vel;
+
         %% PARASITIC DRAG (Component build-up method)
 
         % Skin Friction Drag
@@ -65,10 +69,11 @@ s_wet_empennage = 2.25 * table2array(acdata("A340-300", "TailVertArea")) + 2.25 
 
         weight = 230000; % [kg], average of MTOW and MLW
         lift = weight * 9.80665; % lift is equal to weight in cruise (L = mg)
-        cl = sref;
 
-        cdi = cl^2 / e*pi*ar
+        cl = lift / (s_wing * dynPress);
 
-        induced(i) = 0;
+        cdi = (cl*cl) / (e*pi*AR);
+
+        induced(i) = dynPress * s_wing * cdi;
     end
 end
