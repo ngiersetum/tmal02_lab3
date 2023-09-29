@@ -30,7 +30,7 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
     s_wet_wing = 2.25 * s_wing;
     % s_wet_fuse = (2*pi*l*r_fuse + 2 * pi*r_fuse^2) + (pi*r_fuse^2 + pi * r_fuse * slant_height_cockpit) + (pi*r_fuse^2 + pi * r_fuse * slant_height_empennage);
     s_wet_fuse = 2*pi*(l - l_cockpit - l_empennage)*r_fuse + pi * r_fuse * slant_height_cockpit + pi * r_fuse * slant_height_empennage;
-    s_wet_nacelle = ((pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + (pi*table2array(acdata("A340-300", "NacelleWidth")) * table2array(acdata("A340-300", "NacelleLength"))));
+    s_wet_nacelle = 2 * ((pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + (pi*table2array(acdata("A340-300", "NacelleWidth")) * table2array(acdata("A340-300", "NacelleLength"))));
     s_wet_tvert = 2.25 * table2array(acdata("A340-300", "TailVertArea"));
     s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
     
@@ -41,12 +41,13 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
     %% Drag Calculation
 
     [T, P, rho, a, mu] = ISAfunction(altitude);     % atmospheric conditions
+    
+    nu = mu/rho;
 
     for i=1:numel(velocities)
 
         vel = velocities(i);
         mach = vel/a;
-        nu = mu/rho;
         dynPress = 0.5 * rho * vel*vel;
         Re_pre = vel/nu;
         
@@ -84,6 +85,13 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
         Re_tvert = Re_pre * lchar_tvert;
         Re_thor = Re_pre * lchar_thor;
         Re_nacelle = Re_pre * lchar_nacelle;
+
+        % TEST
+        Re_fuse = 38.21*(lchar_fuse/0.00635)^1.053;
+        Re_wing = 38.21*(lchar_wing/0.00635)^1.053;
+        Re_tvert = 38.21*(lchar_tvert/0.00635)^1.053;
+        Re_thor = 38.21*(lchar_thor/0.00635)^1.053;
+        Re_nacelle = 38.21*(lchar_nacelle/0.00635)^1.053;
        
         % Skin Friction Drag
         Csd_fuse = 0.455 / ((log10(Re_fuse))^2.58 * (1 + 0.144 * mach^2)^0.65);
