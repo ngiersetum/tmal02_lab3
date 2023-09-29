@@ -30,7 +30,7 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
     s_wet_wing = 2.25 * s_wing;
     % s_wet_fuse = (2*pi*l*r_fuse + 2 * pi*r_fuse^2) + (pi*r_fuse^2 + pi * r_fuse * slant_height_cockpit) + (pi*r_fuse^2 + pi * r_fuse * slant_height_empennage);
     s_wet_fuse = 2*pi*(l - l_cockpit - l_empennage)*r_fuse + pi * r_fuse * slant_height_cockpit + pi * r_fuse * slant_height_empennage;
-    s_wet_nacelle = 2 * ((pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + (pi*table2array(acdata("A340-300", "NacelleWidth")) * table2array(acdata("A340-300", "NacelleLength"))));
+    s_wet_nacelle = ((pi*(table2array(acdata("A340-300", "NacelleWidth"))/2)^2) + 2 * (pi*table2array(acdata("A340-300", "NacelleWidth")) * table2array(acdata("A340-300", "NacelleLength"))));
     s_wet_tvert = 2.25 * table2array(acdata("A340-300", "TailVertArea"));
     s_wet_thor = 2.25 * table2array(acdata("A340-300", "TailHorArea"));
     
@@ -121,11 +121,11 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
         Cd_wing = (Csd_wing * FF_wing * Q_wing * s_wet_wing)/s_wing;
         Cd_tvert = (Csd_tvert * FF_tvert * Q_tvert * s_wet_tvert)/s_wing;
         Cd_thor = (Csd_thor * FF_thor * Q_thor * s_wet_thor)/s_wing;
-        Cd_nacelle = 4 * (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing
+        Cd_nacelle = 4 * (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing;
         
 
         % Overall component drag
-        Cd = (Cd_fuse + Cd_wing + Cd_tvert + Cd_thor +  Cd_nacelle) %* 1.1; % 10% misc drag
+        Cd = (Cd_fuse + Cd_wing + Cd_tvert + Cd_thor +  Cd_nacelle) * 1.1; % 10% misc drag
 
         parasitic(i) = Cd * s_wing * dynPress;
         %% LIFT-INDUCED DRAG
