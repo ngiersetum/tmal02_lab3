@@ -58,7 +58,7 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
         lchar_wing = table2array(acdata("A340-300", "MAC"));
         lchar_tvert = 5.8; % [m]
         lchar_thor = 2.9; % [m]
-        lchar_nacelle = table2array(acdata("A340-300", "NacelleLength")); 
+        lchar_nacelle = table2array(acdata("A340-300", "NacelleLength"));
 
         % chordwise location of maximum thickness point
         xc_wing = 0.4;
@@ -121,11 +121,11 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
         Cd_wing = (Csd_wing * FF_wing * Q_wing * s_wet_wing)/s_wing;
         Cd_tvert = (Csd_tvert * FF_tvert * Q_tvert * s_wet_tvert)/s_wing;
         Cd_thor = (Csd_thor * FF_thor * Q_thor * s_wet_thor)/s_wing;
-        Cd_nacelle = (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing;
+        Cd_nacelle = 4 * (Csd_nacelle * FF_nacelle * Q_nacelle * s_wet_nacelle)/s_wing
         
 
         % Overall component drag
-        Cd = (Cd_fuse + Cd_wing + Cd_tvert + Cd_thor +  4 * Cd_nacelle) * 1.1; % 10% misc drag
+        Cd = (Cd_fuse + Cd_wing + Cd_tvert + Cd_thor +  Cd_nacelle) %* 1.1; % 10% misc drag
 
         parasitic(i) = Cd * s_wing * dynPress;
         %% LIFT-INDUCED DRAG
