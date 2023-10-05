@@ -37,7 +37,6 @@ vMin = floor(vApp_ms/10)*10;
 vMax = ceil(vNe_ms/10)*10;
 
 velocities = vMin:5:vMax;      % [m/s]
-
 % Calculate drag across the range of velocities
 [parasitic, induced] = dragFunction(altitude, velocities);
 
