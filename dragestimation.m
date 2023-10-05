@@ -45,12 +45,12 @@ machs = velocities / a;
 
 %% Thrust calculations
 
-staticthrust = table2array(acdata("A340-300","EngStaticThrustkN")) * 4000; % *1000 for kN -> N
+staticthrust = table2array(acdata("A340-300","EngStaticThrustkN")) * 1000; % *1000 for kN -> N
 rho0 = 1.2250;
 
 thrust = staticthrust * (rho / rho0) * (1 - 0.25*machs);
 
-thrust = thrust * table2array(acdata("A340-300","EngNumbersOf"));
+thrust = thrust * table2array(acdata("A340-300","EngNumbersOf"));   % *4 for 4 engines
 
 %% Plot results
 hold on

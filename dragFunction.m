@@ -86,12 +86,12 @@ function [parasitic, induced] = dragFunction(altitude, velocities)
         Re_thor = Re_pre * lchar_thor;
         Re_nacelle = Re_pre * lchar_nacelle;
 
-        % TEST
-        Re_fuse = 38.21*(lchar_fuse/0.00635)^1.053;
-        Re_wing = 38.21*(lchar_wing/0.00635)^1.053;
-        Re_tvert = 38.21*(lchar_tvert/0.00635)^1.053;
-        Re_thor = 38.21*(lchar_thor/0.00635)^1.053;
-        Re_nacelle = 38.21*(lchar_nacelle/0.00635)^1.053;
+%         % TEST
+%         Re_fuse = 38.21*(lchar_fuse/0.00635)^1.053;
+%         Re_wing = 38.21*(lchar_wing/0.00635)^1.053;
+%         Re_tvert = 38.21*(lchar_tvert/0.00635)^1.053;
+%         Re_thor = 38.21*(lchar_thor/0.00635)^1.053;
+%         Re_nacelle = 38.21*(lchar_nacelle/0.00635)^1.053;
        
         % Skin Friction Drag
         Csd_fuse = 0.455 / ((log10(Re_fuse))^2.58 * (1 + 0.144 * mach^2)^0.65);
